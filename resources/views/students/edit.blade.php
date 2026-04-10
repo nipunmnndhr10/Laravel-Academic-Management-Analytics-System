@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="flex gap-4">
-                    <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700">
+                    <button type="submit" class="bg-blue-600 text-black px-8 py-3 rounded-lg hover:bg-blue-700">
                         Update Student
                     </button>
                     <a href="{{ route('students.index') }}" 

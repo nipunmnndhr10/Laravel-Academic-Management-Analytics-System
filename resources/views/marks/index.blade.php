@@ -4,7 +4,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <h1 class="text-3xl font-bold tracking-tight text-gray-900">Marks & Grades</h1>
             @if(auth()->user()->isAdmin() || auth()->user()->isTeacher())
-                <a href="{{ route('marks.create') }}" class="inline-flex items-center justify-center bg-blue-600 text-white px-6 py-3 rounded-lg shadow-sm hover:bg-blue-700 font-semibold text-sm">
+                <a href="{{ route('marks.create') }}" class="inline-flex items-center justify-center bg-blue-600 text-black px-6 py-3 rounded-lg shadow-sm hover:bg-blue-700 font-semibold text-sm">
                     + Add Mark
                 </a>
             @endif

@@ -40,7 +40,7 @@
             </div>
 
             <div class="flex gap-3 pt-2">
-                <button class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">Update Mark</button>
+                <button class="bg-blue-600 text-black px-5 py-2 rounded-lg hover:bg-blue-700">Update Mark</button>
                 <a href="{{ route('marks.index') }}" class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-300">Cancel</a>
             </div>
         </form>

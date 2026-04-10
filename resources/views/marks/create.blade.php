@@ -40,7 +40,7 @@
 
             <!-- Grade is auto-calculated in the Mark model -->
             <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-2">
-                <button class="inline-flex items-center justify-center bg-blue-600 text-white px-6 py-3 rounded-lg shadow-sm hover:bg-blue-700 font-semibold text-sm">Save Mark</button>
+                <button class="inline-flex items-center justify-center bg-blue-600 text-black px-6 py-3 rounded-lg shadow-sm hover:bg-blue-700 font-semibold text-sm">Save Mark</button>
                 <a href="{{ route('marks.index') }}" class="inline-flex items-center justify-center bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 font-semibold text-sm">Cancel</a>
             </div>
         </form>

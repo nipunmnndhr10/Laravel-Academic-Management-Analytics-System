@@ -5,7 +5,7 @@
 
             @if(auth()->user()->isAdmin())
                 <a href="{{ route('students.create') }}"
-                    class="inline-flex items-center justify-center bg-blue-600 text-white px-6 py-3 rounded-lg shadow-sm hover:bg-blue-700 font-semibold text-sm">
+                    class="inline-flex items-center justify-center bg-blue-600 text-black px-6 py-3 rounded-lg shadow-sm hover:bg-blue-700 font-semibold text-sm">
                     + Add New Student
                 </a>
             @endif

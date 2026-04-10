@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Academic Management Project Report</title>
+  <style>
+    body { font-family: "Times New Roman", serif; line-height: 1.5; margin: 36px; }
+    h1, h2, h3 { margin-bottom: 8px; }
+    h1 { font-size: 24pt; text-align: center; }
+    h2 { font-size: 16pt; margin-top: 22px; }
+    h3 { font-size: 13pt; margin-top: 16px; }
+    p { margin: 8px 0; text-align: justify; }
+    ul, ol { margin: 6px 0 10px 22px; }
+    .meta { text-align: center; margin-top: 4px; }
+    .page-break { page-break-before: always; }
+    table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+    th, td { border: 1px solid #444; padding: 8px; vertical-align: top; }
+    th { background: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <h1>Academic Management & Performance Analytics System</h1>
+  <p class="meta"><strong>Project Report (Assignment IIMS)</strong></p>
+  <p class="meta">Prepared for: Advanced Assignment - Laravel Academic Management & Analytics System</p>
+  <p class="meta">Technology: Laravel, MySQL, Blade, Tailwind CSS, Chart.js</p>
+
+  <h2>1. System Explanation</h2>
+  <p>
+    This project is a role-based web application developed to manage academic data and provide analytical insights into student
+    performance. The platform supports three user roles: <strong>Admin</strong>, <strong>Teacher</strong>, and <strong>Student</strong>. Each role
+    is granted permissions aligned with academic workflow and data governance requirements.
+  </p>
+  <p>
+    The system is built on Laravel with MySQL as the data store. It uses server-rendered Blade templates for the UI and Chart.js
+    for dashboard visualizations. The architecture follows a modular approach where student management, course management,
+    enrollment, marks, and analytics are implemented as separate but connected modules.
+  </p>
+
+  <h3>1.1 Core Functional Modules</h3>
+  <ol>
+    <li><strong>Authentication & Role-Based Access Control</strong>: User login/registration and server-side access restrictions.</li>
+    <li><strong>Student Management</strong>: Student record creation, viewing, updates, and deletion (admin-controlled).</li>
+    <li><strong>Course Management</strong>: Course creation and maintenance, including assigning teachers.</li>
+    <li><strong>Enrollment Management</strong>: Mapping students to courses while preventing duplicate enrollments.</li>
+    <li><strong>Marks Module</strong>: Recording marks per student-course pair with automatic grade generation.</li>
+    <li><strong>Analytics Dashboard</strong>: KPI and chart-based insights for decision support.</li>
+  </ol>
+
+  <h3>1.2 Database Design and Relationships</h3>
+  <p>
+    The application is normalized around five core tables: <code>users</code>, <code>students</code>, <code>courses</code>,
+    <code>enrollments</code>, and <code>marks</code>. Key relationships include:
+  </p>
+  <ul>
+    <li>One user can have one student profile (for student role).</li>
+    <li>A teacher (user) can be assigned to many courses.</li>
+    <li>Students and courses are connected via many-to-many enrollment records.</li>
+    <li>Marks are uniquely stored per student-course pair.</li>
+  </ul>
+  <p>
+    Integrity rules are enforced through unique constraints and validation: unique student email, unique course code,
+    non-duplicated enrollments, mark range 0-100, and automatic grade assignment.
+  </p>
+
+  <h3>1.3 Role Capabilities in the Implemented System</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Role</th>
+        <th>What the Role Can Perform</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Admin</strong></td>
+        <td>
+          Full operational control over academic modules: manage students, courses, enrollments, marks, and view full analytics.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Teacher</strong></td>
+        <td>
+          Manage own courses, enter/edit marks for own courses, view related students/enrollments, and view scoped analytics.
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Student</strong></td>
+        <td>
+          Read-only access to own profile, enrolled courses, marks/grades, and personal analytics only.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Access control is enforced at the backend controller level, ensuring that even if UI controls are manipulated, unauthorized
+    operations remain blocked.
+  </p>
+
+  <div class="page-break"></div>
+
+  <h2>2. Data Insights</h2>
+  <p>
+    A central objective of this project is to transform operational academic data into actionable insights. The dashboard is designed
+    to support administrators and teachers in monitoring performance trends and making informed decisions.
+  </p>
+
+  <h3>2.1 Dashboard Metrics</h3>
+  <ol>
+    <li><strong>Total Students</strong>: Current student count in the visible scope.</li>
+    <li><strong>Total Courses</strong>: Number of active courses in scope.</li>
+    <li><strong>Average Marks per Course</strong>: Mean score for each course.</li>
+    <li><strong>Pass vs Fail Ratio</strong>: Distribution of marks above and below pass threshold.</li>
+    <li><strong>Top-Performing Students</strong>: Students ranked by average marks.</li>
+  </ol>
+
+  <h3>2.2 Visualization Layer</h3>
+  <p>
+    To improve clarity and usability, metrics are visualized through three chart types:
+  </p>
+  <ul>
+    <li><strong>Bar Chart</strong>: Average marks by course, useful for comparing course performance side-by-side.</li>
+    <li><strong>Pie Chart</strong>: Pass/fail distribution, useful for quick quality health checks.</li>
+    <li><strong>Line Chart</strong>: Top student performance trend in descending order.</li>
+  </ul>
+
+  <h3>2.3 Practical Insight Scenarios</h3>
+  <ul>
+    <li>If one course has consistently lower averages, the teacher can review assessments and intervention methods.</li>
+    <li>A high fail percentage can trigger remedial sessions and curriculum pacing changes.</li>
+    <li>Top student trends can identify mentoring candidates and benchmark study strategies.</li>
+  </ul>
+
+  <h3>2.4 Data Quality and Engineering Controls</h3>
+  <p>
+    Reliability of insights depends on data quality. The project addresses this with:
+  </p>
+  <ul>
+    <li>Validation constraints for required fields and mark boundaries.</li>
+    <li>Referential integrity through foreign keys and constrained relationships.</li>
+    <li>Duplicate prevention in enrollments and marks using composite uniqueness.</li>
+    <li>Pagination on list screens to support scalable data access.</li>
+    <li>Role-scoped queries to prevent cross-tenant data leakage.</li>
+  </ul>
+
+  <div class="page-break"></div>
+
+  <h2>3. Project Workflow</h2>
+  <p>
+    The implementation followed a phased workflow aligned with the assignment's project management requirements.
+  </p>
+
+  <h3>3.1 Planning (Project Management Requirement)</h3>
+  <p>
+    Scope and objectives were defined first: deliver a role-aware academic platform that supports data management and
+    analytics while preserving data integrity and usability.
+  </p>
+  <p><strong>Key deliverables identified during planning:</strong></p>
+  <ol>
+    <li>Authentication and role permissions</li>
+    <li>Student, course, enrollment, and marks modules</li>
+    <li>Analytics dashboard with required KPIs and charts</li>
+    <li>Validation and integrity enforcement</li>
+    <li>Project documentation and report artifacts</li>
+  </ol>
+
+  <h3>3.2 Task Management by Phase (Project Management Requirement)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>Main Activities</th>
+        <th>Outcome</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Design</td>
+        <td>Identify entities, relationships, role boundaries, and UI structure.</td>
+        <td>Data model and permission strategy finalized.</td>
+      </tr>
+      <tr>
+        <td>Development</td>
+        <td>Implement modules, controllers, views, and role-enforced actions.</td>
+        <td>Functional system with all required modules.</td>
+      </tr>
+      <tr>
+        <td>Testing</td>
+        <td>Run automated tests, validate permission boundaries, and verify workflows.</td>
+        <td>Stable application with passing test suite.</td>
+      </tr>
+      <tr>
+        <td>Reporting</td>
+        <td>Prepare README/report, summarize architecture, workflow, and insights.</td>
+        <td>Submission-ready documentation.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3.3 Implementation Highlights</h3>
+  <ol>
+    <li>
+      <strong>Role enforcement:</strong> Backend checks were implemented as the source of truth for all protected operations.
+    </li>
+    <li>
+      <strong>Student sync behavior:</strong> Student-role users are automatically synchronized with a linked student profile.
+    </li>
+    <li>
+      <strong>Analytics scoping:</strong> Admin sees global insights, teachers see own-course insights, and students see personal insights.
+    </li>
+    <li>
+      <strong>Usability improvements:</strong> Cleaner table actions and stronger call-to-action buttons for core tasks.
+    </li>
+  </ol>
+
+  <h3>3.4 Challenges and Solutions</h3>
+  <ul>
+    <li>
+      <strong>Challenge:</strong> Role drift between frontend visibility and backend authorization.
+      <strong>Solution:</strong> Centralized permission checks in controller actions and consistent UI visibility rules.
+    </li>
+    <li>
+      <strong>Challenge:</strong> Newly registered student accounts not appearing in student records initially.
+      <strong>Solution:</strong> Added automatic student-profile synchronization and one-time data backfill.
+    </li>
+    <li>
+      <strong>Challenge:</strong> Keeping analytics meaningful across different roles.
+      <strong>Solution:</strong> Built role-filtered query pipelines for each KPI.
+    </li>
+  </ul>
+
+  <h2>4. Conclusion</h2>
+  <p>
+    The project successfully delivers an end-to-end academic management and analytics platform aligned with assignment goals.
+    It combines operational data entry workflows with decision-support analytics, while maintaining strict role-based access,
+    data integrity, and maintainable architecture. The phased implementation and documentation approach also satisfies the
+    project management requirements for planning, task execution, and reporting.
+  </p>
+</body>
+</html>
