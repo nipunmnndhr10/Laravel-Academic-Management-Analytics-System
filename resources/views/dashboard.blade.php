@@ -27,8 +27,9 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white border border-gray-200 rounded-lg p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-3">Pass vs Fail Ratio (Pie Chart)</h3>
-                    <canvas id="passFailChart" height="160"></canvas>
-                </div>
+<div class="h-48 w-48 mx-auto">
+    <canvas id="passFailChart"></canvas>
+</div>                </div>
 
                 <div class="bg-white border border-gray-200 rounded-lg p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-3">Top Performing Students (Line Chart)</h3>
@@ -88,7 +89,7 @@
                     backgroundColor: ['#16a34a', '#dc2626'],
                 }],
             },
-            options: { responsive: true },
+            options: { responsive: true},
         });
 
         new Chart(document.getElementById('topStudentsChart'), {

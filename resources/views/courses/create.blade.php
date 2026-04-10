@@ -37,9 +37,9 @@
                 </div>
             @endif
 
-            <div class="flex gap-3 pt-2">
-                <button class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">Save Course</button>
-                <a href="{{ route('courses.index') }}" class="bg-gray-200 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-300">Cancel</a>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-2">
+                <button class="inline-flex items-center justify-center bg-blue-600 text-white px-6 py-3 rounded-lg shadow-sm hover:bg-blue-700 font-semibold text-sm">Save Course</button>
+                <a href="{{ route('courses.index') }}" class="inline-flex items-center justify-center bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 font-semibold text-sm">Cancel</a>
             </div>
         </form>
     </div>

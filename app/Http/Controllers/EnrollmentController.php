@@ -58,14 +58,11 @@ class EnrollmentController extends Controller
      */
     public function create()
     {
-        $this->authorizeManage();
+        $this->authorizeAdminOnly();
 
         $students = Student::query()->orderBy('name')->get(['id', 'name', 'email']);
 
         $courses = Course::query()
-            ->when(auth()->user()->isTeacher(), function ($builder): void {
-                $builder->where('teacher_id', auth()->id());
-            })
             ->orderBy('name')
             ->get(['id', 'name', 'course_code']);
 
@@ -77,7 +74,7 @@ class EnrollmentController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorizeManage();
+        $this->authorizeAdminOnly();
 
         $validated = $request->validate([
             'student_id' => ['required', 'exists:students,id'],
@@ -91,12 +88,6 @@ class EnrollmentController extends Controller
                 }),
             ],
         ]);
-
-        $course = Course::findOrFail($validated['course_id']);
-
-        if ($request->user()->isTeacher() && $course->teacher_id !== $request->user()->id) {
-            abort(403, 'You can only enroll students in your own courses.');
-        }
 
         Enrollment::create($validated);
 
@@ -127,18 +118,11 @@ class EnrollmentController extends Controller
      */
     public function edit(Enrollment $enrollment)
     {
-        $this->authorizeManage();
-
-        if (auth()->user()->isTeacher() && $enrollment->course?->teacher_id !== auth()->id()) {
-            abort(403, 'You can only update enrollments for your own courses.');
-        }
+        $this->authorizeAdminOnly();
 
         $students = Student::query()->orderBy('name')->get(['id', 'name', 'email']);
 
         $courses = Course::query()
-            ->when(auth()->user()->isTeacher(), function ($builder): void {
-                $builder->where('teacher_id', auth()->id());
-            })
             ->orderBy('name')
             ->get(['id', 'name', 'course_code']);
 
@@ -150,11 +134,7 @@ class EnrollmentController extends Controller
      */
     public function update(Request $request, Enrollment $enrollment)
     {
-        $this->authorizeManage();
-
-        if ($request->user()->isTeacher() && $enrollment->course?->teacher_id !== $request->user()->id) {
-            abort(403, 'You can only update enrollments for your own courses.');
-        }
+        $this->authorizeAdminOnly();
 
         $validated = $request->validate([
             'student_id' => ['required', 'exists:students,id'],
@@ -169,12 +149,6 @@ class EnrollmentController extends Controller
             ],
         ]);
 
-        $course = Course::findOrFail($validated['course_id']);
-
-        if ($request->user()->isTeacher() && $course->teacher_id !== $request->user()->id) {
-            abort(403, 'You can only move enrollment to your own courses.');
-        }
-
         $enrollment->update($validated);
 
         return redirect()->route('enrollments.index')->with('success', 'Enrollment updated successfully.');
@@ -185,23 +159,17 @@ class EnrollmentController extends Controller
      */
     public function destroy(Enrollment $enrollment)
     {
-        $this->authorizeManage();
-
-        if (auth()->user()->isTeacher() && $enrollment->course?->teacher_id !== auth()->id()) {
-            abort(403, 'You can only delete enrollments for your own courses.');
-        }
+        $this->authorizeAdminOnly();
 
         $enrollment->delete();
 
         return redirect()->route('enrollments.index')->with('success', 'Enrollment removed successfully.');
     }
 
-    private function authorizeManage(): void
+    private function authorizeAdminOnly(): void
     {
-        $user = auth()->user();
-
-        if (! $user->isAdmin() && ! $user->isTeacher()) {
-            abort(403, 'Only admin or teacher can perform this action.');
+        if (! auth()->user()->isAdmin()) {
+            abort(403, 'Only admin can perform this action.');
         }
     }
 }

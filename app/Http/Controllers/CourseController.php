@@ -168,8 +168,7 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
-        $this->authorizeManage();
-        $this->authorizeTeacherScope($course);
+        $this->authorizeAdminOnly();
 
         $course->delete();
 
@@ -191,6 +190,13 @@ class CourseController extends Controller
 
         if ($user->isTeacher() && $course->teacher_id !== $user->id) {
             abort(403, 'You can only manage your own courses.');
+        }
+    }
+
+    private function authorizeAdminOnly(): void
+    {
+        if (! auth()->user()->isAdmin()) {
+            abort(403, 'Only admin can perform this action.');
         }
     }
 }

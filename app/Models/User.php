@@ -19,6 +19,23 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    protected static function booted(): void
+    {
+        static::saved(function (User $user): void {
+            // Ensure every student account always has a linked student profile.
+            if ($user->isStudent()) {
+                Student::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'enrollment_year' => now()->year,
+                    ]
+                );
+            }
+        });
+    }
+
     /**
      * Get the attributes that should be cast.
      *

@@ -7,29 +7,24 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            $user = auth()->user();
-
-            if ($user->role === 'student' && in_array($request->route()->getActionMethod(), ['create', 'store', 'edit', 'update', 'destroy'])) {
-                abort(403, 'You do not have permission to perform this action.');
-            }
-
-            return $next($request);
-        })->except(['index', 'show']);   // Students can view list & details
-    }
-
     /**
      * Display a listing of students.
      */
     public function index()
     {
+        $user = auth()->user();
         $query = Student::with('user')->latest();
 
-        // Student users should only see their own profile row.
-        if (auth()->user()->isStudent()) {
-            $query->where('user_id', auth()->id());
+        // Students can view only their own profile.
+        if ($user->isStudent()) {
+            $query->where('user_id', $user->id);
+        }
+
+        // Teachers can view only students enrolled in their own courses.
+        if ($user->isTeacher()) {
+            $query->whereHas('courses', function ($builder) use ($user): void {
+                $builder->where('courses.teacher_id', $user->id);
+            });
         }
 
         $students = $query->paginate(10);
@@ -42,6 +37,8 @@ class StudentController extends Controller
      */
     public function create()
     {
+        $this->authorizeAdminOnly();
+
         return view('students.create');
     }
 
@@ -50,6 +47,8 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorizeAdminOnly();
+
         $validated = $request->validate([   // Validation rules for student creation
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:students,email',
@@ -69,8 +68,20 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        if (auth()->user()->isStudent() && $student->user_id !== auth()->id()) {
+        $user = auth()->user();
+
+        if ($user->isStudent() && $student->user_id !== $user->id) {
             abort(403, 'You can only view your own student profile.');
+        }
+
+        if ($user->isTeacher()) {
+            $isEnrolledInTeacherCourse = $student->courses()
+                ->where('teacher_id', $user->id)
+                ->exists();
+
+            if (! $isEnrolledInTeacherCourse) {
+                abort(403, 'You can only view students enrolled in your courses.');
+            }
         }
 
         return view('students.show', compact('student'));
@@ -81,6 +92,8 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
+        $this->authorizeAdminOnly();
+
         return view('students.edit', compact('student'));
     }
 
@@ -89,6 +102,8 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
+        $this->authorizeAdminOnly();
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:students,email,'.$student->id,
@@ -108,9 +123,18 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
+        $this->authorizeAdminOnly();
+
         $student->delete();
 
         return redirect()->route('students.index')
             ->with('success', 'Student deleted successfully!');
+    }
+
+    private function authorizeAdminOnly(): void
+    {
+        if (! auth()->user()->isAdmin()) {
+            abort(403, 'Only admin can perform this action.');
+        }
     }
 }

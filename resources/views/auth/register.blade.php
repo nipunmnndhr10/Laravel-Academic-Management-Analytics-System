@@ -1,4 +1,9 @@
 <x-guest-layout>
+    <div class="mb-6 text-center">
+        <h1 class="text-2xl font-bold text-gray-900">Register</h1>
+        <p class="mt-1 text-sm text-gray-600">Create a new account to continue</p>
+    </div>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -39,25 +44,26 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+        <div class="mt-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Register As</label>
+            <select name="role"
+                class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500"
+                required>
+                <option value="student" @selected(old('role') === 'student')>Student</option>
+                <option value="teacher" @selected(old('role') === 'teacher')>Teacher</option>
+                <option value="admin" @selected(old('role') === 'admin')>Admin</option>
+            </select>
+            <x-input-error :messages="$errors->get('role')" class="mt-2" />
+        </div>
+
+        <div class="mt-6 flex items-center justify-between gap-3">
+            <a class="text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
             </a>
 
-            <x-primary-button class="ms-4">
+            <x-primary-button>
                 {{ __('Register') }}
             </x-primary-button>
-
-            <div class="mt-4">
-    <label class="block text-sm font-medium text-gray-700 mb-2">Register As</label>
-    <select name="role" 
-            class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-blue-500" 
-            required>
-        <option value="student">Student</option>
-        <option value="teacher">Teacher</option>
-        <option value="admin">Admin</option>
-    </select>
-</div>
         </div>
     </form>
 </x-guest-layout>

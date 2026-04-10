@@ -205,11 +205,7 @@ class MarkController extends Controller
      */
     public function destroy(Mark $mark)
     {
-        $this->authorizeManage();
-
-        if (auth()->user()->isTeacher() && $mark->course?->teacher_id !== auth()->id()) {
-            abort(403, 'You can only delete marks for your own courses.');
-        }
+        $this->authorizeAdminOnly();
 
         $mark->delete();
 
@@ -222,6 +218,13 @@ class MarkController extends Controller
 
         if (! $user->isAdmin() && ! $user->isTeacher()) {
             abort(403, 'Only admin or teacher can perform this action.');
+        }
+    }
+
+    private function authorizeAdminOnly(): void
+    {
+        if (! auth()->user()->isAdmin()) {
+            abort(403, 'Only admin can perform this action.');
         }
     }
 }

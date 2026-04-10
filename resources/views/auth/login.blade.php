@@ -1,5 +1,9 @@
 <x-guest-layout>
-    <!-- Session Status -->
+    <div class="mb-6 text-center">
+        <h1 class="text-2xl font-bold text-gray-900">Login</h1>
+        <p class="mt-1 text-sm text-gray-600">Access your academic management account</p>
+    </div>
+
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}">
@@ -32,14 +36,18 @@
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="mt-6 flex items-center justify-between gap-3">
+            <a class="text-sm text-gray-600 hover:text-gray-900" href="{{ route('register') }}">
+                {{ __('Create account') }}
+            </a>
+
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                <a class="text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
+            <x-primary-button>
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
