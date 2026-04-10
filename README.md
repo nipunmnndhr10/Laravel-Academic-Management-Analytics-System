@@ -1,58 +1,189 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Academic Management & Performance Analytics System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
 
-## About Laravel
+This project is a role-based academic management platform built with Laravel and MySQL.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The system includes:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. Authentication with role-based access
+2. Student management
+3. Course management
+4. Enrollment management
+5. Marks and grading
+6. Analytics dashboard with charts
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The application starts at the login page.
 
-## Learning Laravel
+## Tech Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. Laravel 13
+2. PHP 8.4
+3. MySQL
+4. Blade templates
+5. Tailwind CSS
+6. Chart.js for visualization
+7. Pest for testing
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Core Modules
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+1. Authentication and Roles
+2. Students
+3. Courses
+4. Enrollments
+5. Marks
+6. Dashboard Analytics
 
-## Agentic Development
+## Roles and Permissions
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Admin
 
-```bash
-composer require laravel/boost --dev
+Admin has full control over the academic modules in this application.
 
-php artisan boost:install
-```
+Admin can:
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+1. View, create, update, and delete student records
+2. View, create, update, and delete courses
+3. Assign teachers to courses
+4. Enroll students in courses
+5. Enter, edit, and delete marks
+6. View full analytics dashboard data
+7. Access all academic modules without restrictions
 
-## Contributing
+### Teacher
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Teacher has scoped access related to their own courses and student performance.
 
-## Code of Conduct
+Teacher can:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. View students enrolled in their own courses
+2. View courses assigned to them
+3. Create courses
+4. Update their own courses
+5. Enter and edit marks for students in their own courses
+6. View enrollments tied to their own courses
+7. View analytics scoped to their own courses
 
-## Security Vulnerabilities
+Teacher cannot:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Create, update, or delete student records
+2. Delete courses
+3. Create, update, or delete enrollments
+4. Delete marks
+5. Access data outside their own course scope
 
-## License
+### Student
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Student has personal read-only academic access.
+
+Student can:
+
+1. View own student profile
+2. View own enrolled courses
+3. View own marks and grades
+4. View personal analytics on dashboard
+
+Student cannot:
+
+1. Create, update, or delete students
+2. Create, update, or delete courses
+3. Create, update, or delete enrollments
+4. Create, update, or delete marks
+5. View other students data
+
+## Data Model Summary
+
+Main tables:
+
+1. users
+2. students
+3. courses
+4. enrollments
+5. marks
+
+Key relationships:
+
+1. A student belongs to one user
+2. A teacher is represented by a user and can be assigned to many courses
+3. Students and courses are many-to-many through enrollments
+4. Marks are stored per student per course
+
+Data integrity rules:
+
+1. Student email is unique in students table
+2. Course code is unique
+3. One enrollment per student-course pair
+4. One marks record per student-course pair
+5. Marks are validated between 0 and 100
+6. Grade is auto-calculated from marks
+
+## Student Registration Sync Behavior
+
+When a user is saved with role student, a linked record is automatically ensured in students table.
+
+This keeps users and students synchronized and ensures admin can see registered students in the student module.
+
+## Dashboard Analytics
+
+Dashboard includes:
+
+1. Total students
+2. Total courses
+3. Average marks per course
+4. Pass vs fail ratio
+5. Top-performing students
+
+Charts:
+
+1. Bar chart for average marks per course
+2. Pie chart for pass vs fail
+3. Line chart for top students
+
+Dashboard data is role-scoped:
+
+1. Admin sees all data
+2. Teacher sees own course data
+3. Student sees own academic data
+
+## How to Use the System
+
+For now one can register as either Student, Teacher or even Admin to test out the features.
+
+### Admin Workflow
+
+1. Login as admin
+2. Go to Students and manage records
+3. Go to Courses and create or assign teachers
+4. Go to Enrollments and map students to courses
+5. Go to Marks and record performance
+6. Open Dashboard for full analytics and charts
+
+### Teacher Workflow
+
+1. Login as teacher
+2. Open Courses to manage own courses
+3. Open Marks to add or edit marks for own courses
+4. Review Students and Enrollments scoped to own courses
+5. Use Dashboard to view teacher-scoped insights
+
+### Student Workflow
+
+1. Login as student
+2. Open Students to view own profile
+3. Open Courses to view enrolled courses
+4. Open Marks to view own grades
+5. Open Dashboard to view personal analytics
+
+## Notes
+
+1. Root URL redirects to login
+2. Access control is enforced at backend controller level
+3. UI actions are also role-aware, but backend checks are the source of truth
+
+## Future Enhancements
+
+1. Dedicated user-management module for admin
+2. Search and filters in all data tables
+3. Report export to CSV or PDF
+4. API endpoints for integration
+5. Notifications for important updates
