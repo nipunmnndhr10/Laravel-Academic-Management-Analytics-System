@@ -151,6 +151,8 @@ For now one can register as either Student, Teacher or even Admin to test out th
 
 ### Admin Workflow
 
+You can login as admin with: admin101@gmail.com, pw: admin101
+
 1. Login as admin
 2. Go to Students and manage records
 3. Go to Courses and create or assign teachers
